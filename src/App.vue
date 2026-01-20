@@ -1,17 +1,9 @@
 <template>
   <v-app>
     <v-app-bar :title="'ESP32 Partition Builder v' + APP_VERSION">
-      <div class="text-caption">
-        Tutorial
-      </div>
-      <v-btn @click="goToYoutube" color="yellow" icon="mdi-open-in-new" variant="text"></v-btn>
-      <v-btn color="yellow" @click="goToBuyMeACoffee">
-        ☕ Buymeacoffee
-        <v-tooltip activator="parent" location="top">Please support this project!</v-tooltip>
-      </v-btn>
       <v-btn @click="goToRepository" prepend-icon="mdi-help-box">
-        Get Help
-        <v-tooltip activator="parent" location="top">Help & Issues</v-tooltip>
+        寻求帮助
+        <v-tooltip activator="parent" location="top">帮助与问题</v-tooltip>
       </v-btn>
       <template v-slot:extension>
         <v-container fluid class="mb-1 ml-1">
@@ -21,39 +13,39 @@
     </v-app-bar>
     <v-navigation-drawer permanent>
       <div :class="availableMemoryColor()">
-        <div>Available Flash Memory:</div>
+        <div>可用闪存:</div>
         <div>{{ store.partitionTables.getAvailableMemory() }} bytes ({{
           store.hintDisplaySize(store.partitionTables.getAvailableMemory()) }})
         </div>
       </div>
       <v-select v-model="selectedPartitionSet" :items="partitionOptions" item-value="value" item-title="text"
-        label="Built-in partitions" dense hide-details></v-select>
-      <v-select v-model="store.flashSize" :items="FLASH_SIZES" item-value="value" item-title="text" label="Flash Size"
+        label="内置分区" dense hide-details></v-select>
+      <v-select v-model="store.flashSize" :items="FLASH_SIZES" item-value="value" item-title="text" label="Flash 大小"
         dense hide-details @update:model-value="changeFlashSize"></v-select>
       <v-select
         v-model="store.partitionTableOffset"
         :items="PARTITION_TABLE_OFFSET_OPTIONS"
         item-value="value"
         item-title="text"
-        label="Partition Table Offset"
+        label="分区表偏移量"
         dense
         hide-details
         @update:model-value="changePartitionTableOffset"
       ></v-select>
       <v-text-field
         v-model="partitionTableOffsetText"
-        label="Custom Offset (hex)"
+        label="自定义偏移 (hex)"
         density="compact"
         hide-details="auto"
         persistent-hint
-        hint="Must align to 0x1000; leave CSV offsets blank to auto-align"
+        hint="必须与0x1000对齐;保持CSV偏移量为空以便自动对齐"
         :rules="[customOffsetRule]"
         append-inner-icon="mdi-check"
         @click:append-inner="applyCustomPartitionTableOffset(partitionTableOffsetText)"
         @change="applyCustomPartitionTableOffset($event)"
       ></v-text-field>
       <v-select v-model="store.displaySizes" :items="DISPLAY_SIZES" item-value="value" item-title="text"
-        label="Show Hint Size in" dense hide-details></v-select>
+        label="显示提示大小" dense hide-details></v-select>
       <div v-if="store.partitionTables.hasOTAPartitions() && store.partitionTables.hasSubtype(PARTITION_NVS)" class="pl-2 pt-4">
         <v-icon color="green-darken-2" icon="mdi-wifi" size="large"></v-icon>
         Over the air update capability
@@ -67,8 +59,8 @@
         variant="outlined"
         icon="mdi-alert"
       >
-        <div class="font-weight-medium">NVS partition required</div>
-        <div class="text-body-2">Add an NVS partition to restore Over the Air update capability.</div>
+        <div class="font-weight-medium">需要NVS分区</div>
+        <div class="text-body-2">添加NVS分区以恢复空中更新能力。</div>
       </v-alert>
     </v-navigation-drawer>
     <v-main class="d-flex align-top">
@@ -77,7 +69,7 @@
     <v-snackbar v-model="showUrlNotification" location="top">
       {{ urlNotificationText }}
       <template #actions>
-        <v-btn text @click="showUrlNotification = false">Close</v-btn>
+        <v-btn text @click="showUrlNotification = false">关闭</v-btn>
       </template>
     </v-snackbar>
   </v-app>
@@ -194,13 +186,13 @@ function formatHex(value: number): string {
 function customOffsetRule(value: string): true | string {
   const parsed = parseOffset(value);
   if (parsed === null) {
-    return 'Enter a hex offset, e.g. 0x8000';
+    return '输入一个十六进制偏移量，例如0x8000';
   }
   if (parsed % OFFSET_DATA_TYPE !== 0) {
-    return 'Must align to 0x1000';
+    return '必须与0x1000对齐';
   }
   if ((parsed + PARTITION_TABLE_SIZE) >= store.flashSizeBytes) {
-    return 'Offset too large for flash size';
+    return '偏移太大，不适合 Flash 大小';
   }
   return true;
 }

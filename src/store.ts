@@ -22,7 +22,7 @@ export const partitionStore = defineStore('partition_store', () => {
             label = `${parseFloat((size / displaySizes.value).toFixed(5))} Mb`
             break;
           default:
-            label = "Size unknown"
+            label = "未知大小"
             break;
         }
         return label

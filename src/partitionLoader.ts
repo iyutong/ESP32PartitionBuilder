@@ -33,7 +33,7 @@ export function loadPartitionsFromCsv(
 
   const header = rows.shift() || '';
   if (!validHeader.test(header) || rows.length === 0) {
-    return { title: 'Invalid CSV Format', text: 'The CSV file format is incorrect. Please use the correct format.' };
+    return { title: '无效的CSV格式', text: 'CSV文件格式错误，请使用正确的格式。' };
   }
 
   const alignOffset = (offset: number, alignment: number): number => Math.ceil(offset / alignment) * alignment;
@@ -60,14 +60,14 @@ export function loadPartitionsFromCsv(
   for (const row of rows) {
     const [name, type, subtype, offsetHex, sizeStr, flags] = row.split(',');
     if (!name || !type || !subtype || !sizeStr) {
-      return { title: 'Invalid CSV Data', text: 'The CSV file contains invalid data. Please check the file and try again.' };
+      return { title: '无效的CSV数据', text: 'CSV文件包含无效数据，请检查文件并重试。' };
     }
 
     let size: number;
     try {
       size = parseSize(sizeStr);
     } catch (error) {
-      return { title: 'Invalid CSV Data', text: 'The CSV file contains invalid data. Please check the file and try again.' };
+      return { title: '无效的CSV数据', text: 'CSV文件包含无效数据，请检查文件并重试。' };
     }
 
     const isAppPartition = type === PARTITION_TYPE_APP;
@@ -77,25 +77,25 @@ export function loadPartitionsFromCsv(
     if (offsetHex) {
       const parsedOffset = parseInt(offsetHex, 16);
       if (Number.isNaN(parsedOffset)) {
-        return { title: 'Invalid CSV Data', text: 'The CSV file contains invalid data. Please check the file and try again.' };
+        return { title: '无效的CSV数据', text: 'CSV文件包含无效数据，请检查文件并重试。' };
       }
       offset = parsedOffset;
       if (offset < baseOffset) {
         return {
-          title: 'Invalid Offset',
-          text: `Partition offsets must start at or after ${formatHex(baseOffset)}.`
+          title: '无效的偏移量',
+          text: `分区偏移量必须从 ${formatHex(baseOffset)} 开始。`
         };
       }
       if (offset % alignment !== 0) {
         return {
-          title: 'Invalid Offset Alignment',
-          text: `Partition offsets must align to ${formatHex(alignment)}.`
+          title: '无效的偏移量对齐',
+          text: `分区偏移量必须对齐到 ${formatHex(alignment)}.`
         };
       }
       if (isAppPartition && (offset < OFFSET_APP_TYPE || offset % OFFSET_APP_TYPE !== 0)) {
         return {
-          title: 'Invalid App Offset',
-          text: `App partitions must start at ${formatHex(OFFSET_APP_TYPE)} or higher and use ${formatHex(OFFSET_APP_TYPE)} alignment.`
+          title: '无效的应用偏移量',
+          text: `应用分区必须从 ${formatHex(OFFSET_APP_TYPE)} 开始，且对齐到 ${formatHex(OFFSET_APP_TYPE)}。`
         };
       }
       nextOffset = offset + size;
@@ -164,7 +164,7 @@ const parseSize = (sizeStr: string): number => {
 
   const match = sizeStr.match(sizeRegex);
   if (!match) {
-    throw new Error(`Invalid size format: ${sizeStr}`);
+    throw new Error(`无效的大小格式: ${sizeStr}`);
   }
 
   const [, value = '', unit = ''] = match;

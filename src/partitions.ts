@@ -28,7 +28,7 @@ export class PartitionTable {
     while (this.getTotalPartitionSize() > this.getTotalMemory()) {
       const removedPartition = this.partitions.pop();
       if (!removedPartition) {
-        throw new Error('Cannot remove any more partitions. The partitions cannot fit within the new flash memory size.');
+        throw new Error('无法移除更多分区。分区无法适应新的闪存内存大小。');
       }
     }
 
@@ -38,20 +38,20 @@ export class PartitionTable {
 
   setPartitionTableOffset(newOffset: number) {
     if (newOffset % OFFSET_DATA_TYPE !== 0) {
-      throw new Error('Partition table offset must be aligned to 0x1000.');
+      throw new Error('分区表偏移量必须对齐到 0x1000。');
     }
     this.partitionTableOffset = newOffset;
     const baseOffset = this.getPartitionTableBaseOffset();
     const violating = this.partitions.find(p => p.fixedOffset && p.offset < baseOffset);
     if (violating) {
-      throw new Error(`Partition ${violating.name} is before the partition table base ${baseOffset.toString(16)}`);
+      throw new Error(`分区 ${violating.name} 位于分区表基址 ${baseOffset.toString(16)} 之前。`);
     }
     this.recalculateOffsets();
 
     while (this.getAvailableMemory() < 0) {
       const removedPartition = this.partitions.pop();
       if (!removedPartition) {
-        throw new Error('Cannot remove any more partitions. The partitions cannot fit within the new partition table offset.');
+        throw new Error('无法移除更多分区。分区无法适应新的分区表偏移量。');
       }
       this.recalculateOffsets();
     }
@@ -162,7 +162,7 @@ export class PartitionTable {
     const index = this.partitions.findIndex(partition => partition.name === name);
 
     if (index === -1) {
-      throw new Error(`Partition ${name} not found.`);
+      throw new Error(`分区 ${name} 未找到。`);
     }
 
     this.partitions.splice(index, 1);

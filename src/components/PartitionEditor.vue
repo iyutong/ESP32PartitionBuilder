@@ -2,31 +2,31 @@
   <v-container>
     <v-form ref="formRef" @submit.prevent="downloadCSV">
       <v-app-bar location="top" permanent>
-        <v-btn color="primary" @click="addPartition">Add Partition
+        <v-btn color="primary" @click="addPartition">添加分区
           <v-menu activator="parent">
             <v-list v-if="store.partitionTables.getAvailableMemory() > 0" style="cursor: pointer;">
               <v-tooltip location="end">
                 <template #activator="{ props }">
                   <v-list-item v-bind="props" @click="addNVSPartition">
-                    NVS (Non-Volatile Storage)
+                    NVS（非易失性存储）
                   </v-list-item>
                 </template>
-                <span>Required when using Wi-Fi, BLE, or Preferences APIs.</span>
+                <span>使用 Wi-Fi、BLE 或偏好设置 API 时必不可少。</span>
               </v-tooltip>
               <v-list-item @click="addOTAPartition">
-                OTA (Over The Air Updates)
+                OTA (无线升级)
               </v-list-item>
               <v-list-item @click="addFactoryPartition">
-                Factory App
+                工厂应用
               </v-list-item>
               <v-list-item @click="addFATPartition">
-                FAT File System
+                FAT文件系统
               </v-list-item>
               <v-list-item @click="addSPIFFPartition">
-                SPIFFS File System
+                SPIFFS文件系统
               </v-list-item>
               <v-list-item @click="addLittleFSPartition">
-                LittleFS File System
+                LittleFS文件系统
               </v-list-item>
               <v-list-item @click="addOTADataPartition">
                 OTA Data
@@ -38,19 +38,18 @@
                 Test App
               </v-list-item>
               <v-list-item @click="addPhyPartition">
-                PHY Initialisation Data
+                PHY 初始化数据
               </v-list-item>
             </v-list>
           </v-menu>
         </v-btn>
-        <v-btn color="primary" @click="loadCSV" dense class="mr-2">Load CSV
-          <v-tooltip activator="parent" location="top">Load a CSV partition file</v-tooltip>
+        <v-btn color="primary" @click="loadCSV" dense class="mr-2">加载 CSV
+          <v-tooltip activator="parent" location="top">加载 CSV 分区文件</v-tooltip>
         </v-btn>
         <input type="file" ref="fileInput" @change="handleFileUpload" style="display: none;" accept=".csv" />
         <v-btn color="primary" type="submit" dense
-          :disabled="store.partitionTables.getPartitions().length == 0">Download
-          CSV
-          <v-tooltip activator="parent" location="top">Download partitions as a CSV file</v-tooltip>
+          :disabled="store.partitionTables.getPartitions().length == 0">下载 CSV
+          <v-tooltip activator="parent" location="top">下载分区作为 CSV 文件</v-tooltip>
         </v-btn>
         <v-spacer></v-spacer>
         <v-tooltip location="top">
@@ -62,7 +61,7 @@
               </v-icon>
             </v-btn>
           </template>
-          <span>Delete all Partitions</span>
+          <span>删除所有分区</span>
         </v-tooltip>
       </v-app-bar>
       <div v-for="(partition, index) in store.partitionTables.getPartitions()" :key="index"
@@ -106,7 +105,7 @@
                   </v-icon>
                 </v-btn>
               </template>
-              <span>Delete Partition</span>
+              <span>删除分区</span>
             </v-tooltip>
           </v-col>
         </v-row>
@@ -125,7 +124,7 @@
                   </v-icon>
                 </v-btn>
               </template>
-              <span>Resize to fit</span>
+              <span>调整大小以适应</span>
             </v-tooltip>
             <v-btn color="primary" icon="mdi-minus-box" size="small" variant="text"
               @click="decrement(partition)"></v-btn>
@@ -142,7 +141,7 @@
                   </v-icon>
                 </v-btn>
               </template>
-              <span>Reclaim Memory</span>
+              <span>回收内存</span>
             </v-tooltip>
             <v-tooltip location="top">
               <template v-slot:activator="{ props }">
@@ -153,7 +152,7 @@
                   </v-icon>
                 </v-btn>
               </template>
-              <span>Resize to recommended value</span>
+              <span>调整大小以推荐值</span>
             </v-tooltip>
           </template>
         </v-slider>
@@ -171,8 +170,8 @@
       <v-card max-width="400" color="white" :title="dialogTitle">
         <v-card-text>{{ dialogText }}</v-card-text>
         <v-card-actions>
-          <v-btn @click="showOverrideDialog = false">Cancel</v-btn>
-          <v-btn color="primary" @click="confirmOverride">Proceed</v-btn>
+          <v-btn @click="showOverrideDialog = false">取消</v-btn>
+          <v-btn color="primary" @click="confirmOverride">继续</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -234,7 +233,7 @@ const partitionNameRule = (name: string, index: number) => {
   const nameConflict = store.partitionTables.getPartitions().some((p, i) => i !== index && p.name === name)
   if (nameConflict) {
     console.log(name)
-    return 'Name already exists'
+    return '名称已存在'
   } else {
     return true
   }
@@ -294,32 +293,32 @@ const partitionSizeRule = (partition: Partition) => {
   switch (partition.subtype) {
     case PARTITION_NVS:
       if (partition.size < NVS_PARTITION_SIZE_RECOMMENDED) {
-        return `NVS partition size must be at least ${NVS_PARTITION_SIZE_RECOMMENDED} bytes. (${store.hintDisplaySize(NVS_PARTITION_SIZE_RECOMMENDED)})`;
+        return `NVS 分区大小必须至少为 ${NVS_PARTITION_SIZE_RECOMMENDED} 字节。 (${store.hintDisplaySize(NVS_PARTITION_SIZE_RECOMMENDED)})`;
       }
       break;
     case PARTITION_OTA:
       if (partition.size != OTA_DATA_PARTITION_SIZE) {
-        return `OTA data partition size must be ${OTA_DATA_PARTITION_SIZE} bytes. (${store.hintDisplaySize(OTA_DATA_PARTITION_SIZE)})`;
+        return `OTA 数据分区大小必须为 ${OTA_DATA_PARTITION_SIZE} 字节。 (${store.hintDisplaySize(OTA_DATA_PARTITION_SIZE)})`;
       }
       break;
     case PARTITION_FAT:
       if (partition.size < FAT_MIN_PARTITION_SIZE) {
-        return `FAT partition minimal recommended size is ${FAT_MIN_PARTITION_SIZE} bytes. (${store.hintDisplaySize(FAT_MIN_PARTITION_SIZE)})`;
+        return `FAT 分区最小推荐大小为 ${FAT_MIN_PARTITION_SIZE} 字节。 (${store.hintDisplaySize(FAT_MIN_PARTITION_SIZE)})`;
       }
       break;
     case PARTITION_SPIFFS:
       if (partition.size < SPIFFS_MIN_PARTITION_SIZE) {
-        return `SPIFFS partition minimal recommended size is ${SPIFFS_MIN_PARTITION_SIZE} bytes. (${store.hintDisplaySize(SPIFFS_MIN_PARTITION_SIZE)})`;
+        return `SPIFFS 分区最小推荐大小为 ${SPIFFS_MIN_PARTITION_SIZE} 字节。 (${store.hintDisplaySize(SPIFFS_MIN_PARTITION_SIZE)})`;
       }
       break;
     case PARTITION_LITTLEFS:
       if (partition.size < LITTLEFS_MIN_PARTITION_SIZE) {
-        return `LittleFS partition minimal recommended size is ${LITTLEFS_MIN_PARTITION_SIZE} bytes. (${store.hintDisplaySize(LITTLEFS_MIN_PARTITION_SIZE)})`;
+        return `LittleFS 分区最小推荐大小为 ${LITTLEFS_MIN_PARTITION_SIZE} 字节。 (${store.hintDisplaySize(LITTLEFS_MIN_PARTITION_SIZE)})`;
       }
       break;
     case PARTITION_COREDUMP:
       if (partition.size < COREDUMP_MIN_PARTITION_SIZE) {
-        return `Core Dump partition minimal recommended size is ${COREDUMP_MIN_PARTITION_SIZE} bytes. (${store.hintDisplaySize(COREDUMP_MIN_PARTITION_SIZE)})`;
+        return `Core Dump 分区最小推荐大小为 ${COREDUMP_MIN_PARTITION_SIZE} 字节。 (${store.hintDisplaySize(COREDUMP_MIN_PARTITION_SIZE)})`;
       }
       break;
   }
@@ -356,21 +355,21 @@ const downloadCSV = async () => {
     const { valid } = await formRef.value.validate();
     if (valid) {
       if (store.partitionTables.getAvailableMemory() < 0) {
-        dialogText.value = "Partitions memory exceed flash memory capacity. Do you want to proceed and download the CSV anyway?"
-        dialogTitle.value = "Memory Warnings"
+        dialogText.value = "分区内存超过闪存容量。你还想继续下载CSV吗？"
+        dialogTitle.value = "内存警告"
         showOverrideDialog.value = true;
       } else {
         if (store.partitionTables.getAvailableMemory() > 0) {
-          dialogText.value = "You have memory left avalaible in your flash memory. Do you want to proceed and download the CSV anyway?"
-          dialogTitle.value = "Memory Warnings"
+          dialogText.value = "你还有可用的闪存内存。你还想继续下载CSV吗？"
+          dialogTitle.value = "内存警告"
           showOverrideDialog.value = true;
         } else {
           generateCSV();
         }
       }
     } else {
-      dialogText.value = "There are validation errors in the partitions. Do you want to proceed and download the CSV anyway?"
-      dialogTitle.value = "Partition Rules Warnings"
+      dialogText.value = "分区存在验证错误。你还想继续下载CSV吗？"
+      dialogTitle.value = "分区规则警告"
       showOverrideDialog.value = true;
     }
   }
@@ -444,14 +443,14 @@ function showAlertMessage(title: string, message: string) {
 
 const addPartition = () => {
   if (store.partitionTables.getAvailableMemory() <= 0) {
-    showAlertMessage("Cannot add a new partition", "There is not enough memory to add a new partition.  Remove a partition or resize an existing one.")
+    showAlertMessage("无法添加新分区", "没有足够的内存来添加新分区。删除一个分区或调整现有分区的大小。")
   }
 };
 
 const addNVSPartition = () => {
   unlockPartitionOffsets();
   if (store.partitionTables.getAvailableMemory() < NVS_PARTITION_SIZE_RECOMMENDED) {
-    showAlertMessage("Cannot add a NVS partition", `There is not enough memory to add a NVS partition. NVS partition size must be at least ${NVS_PARTITION_SIZE_RECOMMENDED} bytes (${store.hintDisplaySize(NVS_PARTITION_SIZE_RECOMMENDED)}).`)
+    showAlertMessage("无法添加NVS分区", `没有足够的内存来添加NVS分区。NVS分区大小必须至少为 ${NVS_PARTITION_SIZE_RECOMMENDED} 字节 (${store.hintDisplaySize(NVS_PARTITION_SIZE_RECOMMENDED)}).`)
   } else {
     const newName = generatePartitionName("nvs");
     store.partitionTables.addPartition(newName, PARTITION_TYPE_DATA, PARTITION_NVS, NVS_PARTITION_SIZE_RECOMMENDED, "")
@@ -461,7 +460,7 @@ const addNVSPartition = () => {
 const addFATPartition = () => {
   unlockPartitionOffsets();
   if (store.partitionTables.getAvailableMemory() < FAT_MIN_PARTITION_SIZE) {
-    showAlertMessage("Cannot add a FAT partition", `There is not enough memory to add a FAT partition. FAT partition size must be at least ${FAT_MIN_PARTITION_SIZE} bytes (${store.hintDisplaySize(FAT_MIN_PARTITION_SIZE)}).`)
+    showAlertMessage("无法添加FAT分区", `没有足够的内存来添加FAT分区。FAT分区大小必须至少为 ${FAT_MIN_PARTITION_SIZE} 字节 (${store.hintDisplaySize(FAT_MIN_PARTITION_SIZE)}).`)
   } else {
     const newName = generatePartitionName("fat");
     store.partitionTables.addPartition(newName, PARTITION_TYPE_DATA, PARTITION_FAT, FAT_MIN_PARTITION_SIZE, "")
@@ -470,7 +469,7 @@ const addFATPartition = () => {
 const addSPIFFPartition = () => {
   unlockPartitionOffsets();
   if (store.partitionTables.getAvailableMemory() < SPIFFS_MIN_PARTITION_SIZE) {
-    showAlertMessage("Cannot add a SPIFF partition", `There is not enough memory to add a SPIFFS partition. SPIFFS partition size must be at least ${SPIFFS_MIN_PARTITION_SIZE} bytes (${store.hintDisplaySize(SPIFFS_MIN_PARTITION_SIZE)}).`)
+    showAlertMessage("无法添加SPIFFS分区", `没有足够的内存来添加SPIFFS分区。SPIFFS分区大小必须至少为 ${SPIFFS_MIN_PARTITION_SIZE} 字节 (${store.hintDisplaySize(SPIFFS_MIN_PARTITION_SIZE)}).`)
   } else {
     const newName = generatePartitionName("spiffs");
     store.partitionTables.addPartition(newName, PARTITION_TYPE_DATA, PARTITION_SPIFFS, SPIFFS_MIN_PARTITION_SIZE, "")
@@ -479,7 +478,7 @@ const addSPIFFPartition = () => {
 const addLittleFSPartition = () => {
   unlockPartitionOffsets();
   if (store.partitionTables.getAvailableMemory() < LITTLEFS_MIN_PARTITION_SIZE) {
-    showAlertMessage("Cannot add a LittleFS partition", `There is not enough memory to add a LittleFS partition. LittleFS partition size must be at least ${LITTLEFS_MIN_PARTITION_SIZE} bytes (${store.hintDisplaySize(LITTLEFS_MIN_PARTITION_SIZE)}).`)
+    showAlertMessage("无法添加LittleFS分区", `没有足够的内存来添加LittleFS分区。LittleFS分区大小必须至少为 ${LITTLEFS_MIN_PARTITION_SIZE} 字节 (${store.hintDisplaySize(LITTLEFS_MIN_PARTITION_SIZE)}).`)
   } else {
     const newName = generatePartitionName("littlefs");
     store.partitionTables.addPartition(newName, PARTITION_TYPE_DATA, PARTITION_LITTLEFS, LITTLEFS_MIN_PARTITION_SIZE, "")
@@ -488,7 +487,7 @@ const addLittleFSPartition = () => {
 const addCoreDumpPartition = () => {
   unlockPartitionOffsets();
   if (store.partitionTables.getAvailableMemory() < COREDUMP_MIN_PARTITION_SIZE) {
-    showAlertMessage("Cannot add a Core Dump partition", `There is not enough memory to add a Core Dump partition. Core Dump partition size must be at least ${COREDUMP_MIN_PARTITION_SIZE} bytes (${store.hintDisplaySize(COREDUMP_MIN_PARTITION_SIZE)}).`)
+    showAlertMessage("无法添加Core Dump分区", `没有足够的内存来添加Core Dump分区。Core Dump分区大小必须至少为 ${COREDUMP_MIN_PARTITION_SIZE} 字节 (${store.hintDisplaySize(COREDUMP_MIN_PARTITION_SIZE)}).`)
   } else {
     const newName = generatePartitionName("coredump");
     store.partitionTables.addPartition(newName, PARTITION_TYPE_DATA, PARTITION_COREDUMP, COREDUMP_MIN_PARTITION_SIZE, "")
@@ -497,7 +496,7 @@ const addCoreDumpPartition = () => {
 const addPhyPartition = () => {
   unlockPartitionOffsets();
   if (store.partitionTables.getAvailableMemory() < PHY_MIN_PARTITION_SIZE) {
-    showAlertMessage("Cannot add a PHY partition", `There is not enough memory to add a PHY partition. Phy partition size must be at least ${PHY_MIN_PARTITION_SIZE} bytes (${store.hintDisplaySize(PHY_MIN_PARTITION_SIZE)}).`)
+    showAlertMessage("无法添加PHY分区", `没有足够的内存来添加PHY分区。PHY分区大小必须至少为 ${PHY_MIN_PARTITION_SIZE} 字节 (${store.hintDisplaySize(PHY_MIN_PARTITION_SIZE)}).`)
   } else {
     const newName = generatePartitionName("phy");
     store.partitionTables.addPartition(newName, PARTITION_TYPE_DATA, PARTITION_PHY, PHY_MIN_PARTITION_SIZE, "")
@@ -506,7 +505,7 @@ const addPhyPartition = () => {
 const addFactoryPartition = () => {
   unlockPartitionOffsets();
   if (store.partitionTables.getAvailableMemory() < OFFSET_APP_TYPE) {
-    showAlertMessage("Cannot add a Factory App partition", `There is not enough memory to add a Factory App partition. Factory App partition size must be at least ${OFFSET_APP_TYPE} bytes (${store.hintDisplaySize(OFFSET_APP_TYPE)}).`)
+    showAlertMessage("无法添加Factory App分区", `没有足够的内存来添加Factory App分区。Factory App分区大小必须至少为 ${OFFSET_APP_TYPE} 字节 (${store.hintDisplaySize(OFFSET_APP_TYPE)}).`)
   } else {
     const newName = generatePartitionName("factory");
     store.partitionTables.addPartition(newName, PARTITION_TYPE_APP, PARTITION_FACTORY, OFFSET_APP_TYPE, "")
@@ -515,7 +514,7 @@ const addFactoryPartition = () => {
 const addTestPartition = () => {
   unlockPartitionOffsets();
   if (store.partitionTables.getAvailableMemory() < OFFSET_APP_TYPE) {
-    showAlertMessage("Cannot add a Test App partition", `There is not enough memory to add a Test App partition. Factory App partition size must be at least ${OFFSET_APP_TYPE} bytes (${store.hintDisplaySize(OFFSET_APP_TYPE)}).`)
+    showAlertMessage("无法添加Test App分区", `没有足够的内存来添加Test App分区。Test App分区大小必须至少为 ${OFFSET_APP_TYPE} 字节 (${store.hintDisplaySize(OFFSET_APP_TYPE)}).`)
   } else {
     const newName = generatePartitionName("test");
     store.partitionTables.addPartition(newName, PARTITION_TYPE_APP, PARTITION_TEST, OFFSET_APP_TYPE, "")
@@ -524,11 +523,11 @@ const addTestPartition = () => {
 const addOTADataPartition = () => {
   unlockPartitionOffsets();
   if (store.partitionTables.getAvailableMemory() < OTA_DATA_PARTITION_SIZE) {
-    showAlertMessage("Cannot add an OTA Data partition", `There is not enough memory to add an OTA Data partition. Factory App partition size must be at least ${OTA_DATA_PARTITION_SIZE} bytes (${store.hintDisplaySize(OTA_DATA_PARTITION_SIZE)}).`)
+    showAlertMessage("无法添加OTA Data分区", `没有足够的内存来添加OTA Data分区。OTA Data分区大小必须至少为 ${OTA_DATA_PARTITION_SIZE} 字节 (${store.hintDisplaySize(OTA_DATA_PARTITION_SIZE)}).`)
     return
   }
   if (store.partitionTables.hasSubtype(PARTITION_OTA)) {
-    showAlertMessage("Cannot add OTA Data partitions", `Only one OTA Data partition is permitted`)
+    showAlertMessage("无法添加OTA Data分区", `只能添加一个OTA Data分区`)
     return
   }
   const newName = generatePartitionName("otadata");
@@ -542,9 +541,9 @@ const addOTAPartition = () => {
   const sizeNeeded = OTA_DATA_PARTITION_SIZE + OFFSET_APP_TYPE * 2 + (needsNvs ? NVS_PARTITION_SIZE_RECOMMENDED : 0)
   if (store.partitionTables.getAvailableMemory() < sizeNeeded) {
     const requirementMessage = needsNvs
-      ? `You need at least ${sizeNeeded} bytes available (${store.hintDisplaySize(sizeNeeded)}) for OTA Data, two OTA App slots, and an NVS partition.`
-      : `You need at least ${sizeNeeded} bytes available (${store.hintDisplaySize(sizeNeeded)}) for OTA Data and two OTA App slots.`
-    showAlertMessage("Cannot add OTA partitions", `There is not enough memory to add OTA support. ${requirementMessage}`)
+      ? `您需要至少 ${sizeNeeded} 字节可用 (${store.hintDisplaySize(sizeNeeded)}) 用于OTA Data、两个OTA App插槽和一个NVS分区。`
+      : `您需要至少 ${sizeNeeded} 字节可用 (${store.hintDisplaySize(sizeNeeded)}) 用于OTA Data和两个OTA App插槽。`
+    showAlertMessage("无法添加OTA分区", `没有足够的内存来添加OTA支持。${requirementMessage}`)
     return
   }
   let partitionName: string = ""
@@ -589,7 +588,7 @@ const resizeToFit = (partition: Partition) => {
     resize = partition.size + store.partitionTables.getAvailableMemory()
   }
   if (resize <= 0 || (partition.type === PARTITION_TYPE_APP && partition.size <= OFFSET_APP_TYPE)) {
-    showAlertMessage("Cannot resize the partition", `The partition is not large enough to remove ${store.partitionTables.getAvailableMemory()} bytes (${store.hintDisplaySize(store.partitionTables.getAvailableMemory())}).`)
+    showAlertMessage("无法调整分区大小", `分区大小不足以移除 ${store.partitionTables.getAvailableMemory()} 字节 (${store.hintDisplaySize(store.partitionTables.getAvailableMemory())}).`)
   } else {
     if (resizeOnOta) {
       store.partitionTables.updatePartitionSize(partition, Math.round(resize / 2));
