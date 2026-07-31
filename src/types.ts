@@ -11,5 +11,6 @@ export interface Partition {
 
  export  interface PartitionSet {
     name: string;
+    label?: string;
     partitions: Partition[];
   }

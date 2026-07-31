@@ -3,10 +3,12 @@ import type { PartitionSet } from '@/types';
 export const esp32Partitions: PartitionSet[] = [
   {
     name: 'Empty (no partitions)',
+    label: '空（无分区）',
     partitions: []
   },
   {
     name: 'OTA With Spiffs',
+    label: 'OTA 带 SPIFFS',
     partitions: [
       { name: 'nvs', type: 'data', subtype: 'nvs', size: 0x5000, offset: 0, flags: "" },
       { name: 'otadata', type: 'data', subtype: 'ota', size: 0x2000, offset: 0, flags: "" },
@@ -18,6 +20,7 @@ export const esp32Partitions: PartitionSet[] = [
   },
   {
     name: 'OTA with FAT',
+    label: 'OTA 带 FAT',
     partitions: [
       { name: 'nvs', type: 'data', subtype: 'nvs', size: 0x5000, offset: 0, flags: "" },
       { name: 'otadata', type: 'data', subtype: 'ota', size: 0x2000, offset: 0, flags: "" },
@@ -29,6 +32,7 @@ export const esp32Partitions: PartitionSet[] = [
   },
   {
     name: 'Single factory app, no OTA)',
+    label: '单工厂应用，无 OTA',
     partitions: [
       { name: 'nvs', type: 'data', subtype: 'nvs', size: 0x5000, offset: 0, flags: "" },
       { name: 'factory', type: 'app', subtype: 'factory', size: 0x3F0000, offset: 0, flags: "" },
@@ -36,6 +40,7 @@ export const esp32Partitions: PartitionSet[] = [
   },
   {
     name: 'Zigbee ESP-IDF',
+    label: 'Zigbee ESP-IDF',
     partitions: [
       { name: 'nvs', type: 'data', subtype: 'nvs', size: 0x6000, offset: 0, flags: "" },
       { name: 'phy_init', type: 'data', subtype: 'phy', size: 0x1000, offset: 0, flags: "" },

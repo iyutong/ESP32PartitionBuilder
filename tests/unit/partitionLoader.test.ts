@@ -134,8 +134,8 @@ describe('loadPartitionsFromCsv', () => {
     const store = partitionStore()
 
     expect(loadPartitionsFromCsv('not,a,partition,file', store)).toEqual({
-      title: 'Invalid CSV Format',
-      text: 'The CSV file format is incorrect. Please use the correct format.'
+      title: '无效的 CSV 格式',
+      text: 'CSV 文件格式不正确。请使用正确的格式。'
     })
   })
 
@@ -149,6 +149,6 @@ describe('loadPartitionsFromCsv', () => {
       store
     )
 
-    expect(error?.title).toBe('Invalid Offset Alignment')
+    expect(error?.title).toBe('无效的偏移量对齐')
   })
 })

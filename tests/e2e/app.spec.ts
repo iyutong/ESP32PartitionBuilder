@@ -11,12 +11,12 @@ test('renders the default app shell', async ({ page }) => {
 
   await expect(page.getByTestId('app-shell')).toBeVisible()
   await expect(page.getByTestId('partition-visualizer')).toBeVisible()
-  await expect(page.getByTestId('available-memory')).toContainText('Available Flash Memory')
+  await expect(page.getByTestId('available-memory')).toContainText('可用闪存容量')
   await expect(page.getByTestId('target-chip-select')).toBeVisible()
   await expect(page.getByTestId('flashing-hints-button')).toBeVisible()
   await expect(page.getByTestId('resources-section')).toBeInViewport()
-  await expect(page.getByTestId('resources-section')).toContainText('Maker Tools')
-  await expect(page.getByText('Unallocated Flash')).toBeVisible()
+  await expect(page.getByTestId('resources-section')).toContainText('创客工具')
+  await expect(page.getByText('未分配闪存')).toBeVisible()
   await expect(page.getByTestId('download-csv-button')).toBeDisabled()
 })
 
@@ -59,9 +59,9 @@ test('opens the Maker Tools page from the sidebar', async ({ page }) => {
 test('loads a built-in partition set and updates flash size', async ({ page }) => {
   await page.goto('/')
 
-  await openSelect(page, 'built-in-partitions-select', 'OTA With Spiffs')
+  await openSelect(page, 'built-in-partitions-select', 'OTA 带 SPIFFS')
   await expect(page.getByTestId('partition-card')).toHaveCount(6)
-  await expect(page.getByText('Over the air update capability')).toBeVisible()
+  await expect(page.getByText('支持空中升级（OTA）')).toBeVisible()
 
   await openSelect(page, 'flash-size-select', '8 MB')
   await expect(page.getByTestId('available-memory')).toContainText('bytes')
@@ -70,7 +70,7 @@ test('loads a built-in partition set and updates flash size', async ({ page }) =
 test('requires opting in before allowing unequal OTA slots', async ({ page }) => {
   await page.goto('/')
 
-  await openSelect(page, 'built-in-partitions-select', 'OTA With Spiffs')
+  await openSelect(page, 'built-in-partitions-select', 'OTA 带 SPIFFS')
   await expect(page.getByTestId('asymmetric-ota-toggle')).toBeVisible()
   await expect(page.getByTestId('asymmetric-ota-warning')).toHaveCount(0)
   const partitionCards = page.getByTestId('partition-card')
@@ -78,7 +78,7 @@ test('requires opting in before allowing unequal OTA slots', async ({ page }) =>
   await expect(partitionCards.nth(2).getByTestId('partition-size-input').locator('input')).toHaveValue('1306624')
   await expect(partitionCards.nth(3).getByTestId('partition-size-input').locator('input')).toHaveValue('1306624')
 
-  await page.getByRole('checkbox', { name: 'Allow unequal OTA slots' }).check()
+  await page.getByRole('checkbox', { name: '允许不相等 OTA 插槽' }).check()
   await expect(page.getByTestId('asymmetric-ota-warning')).toBeVisible()
 })
 
@@ -92,7 +92,7 @@ test('exports the Zigbee ESP-IDF built-in partition set', async ({ page }) => {
   await expect(page.getByText('zb_fct')).toBeVisible()
 
   await page.getByTestId('download-csv-button').click()
-  await expect(page.getByTestId('override-dialog')).toContainText('Memory Warnings')
+  await expect(page.getByTestId('override-dialog')).toContainText('内存警告')
 
   const downloadPromise = page.waitForEvent('download')
   await page.getByTestId('confirm-download-button').click()
@@ -114,7 +114,7 @@ test('can reapply a selected built-in partition set after clearing partitions', 
   await page.getByTestId('clear-partitions-button').click()
 
   await expect(page.getByTestId('partition-card')).toHaveCount(0)
-  await expect(page.getByTestId('built-in-partitions-select')).toContainText('Empty (no partitions)')
+  await expect(page.getByTestId('built-in-partitions-select')).toContainText('空（无分区）')
 
   await openSelect(page, 'built-in-partitions-select', 'Zigbee ESP-IDF')
 
@@ -160,7 +160,7 @@ test('keeps tiny fixed-offset partitions visible in the visualizer', async ({ pa
     }
   })
 
-  for (const label of ['coredump (data/coredump)', 'nvs (data/nvs)', 'Unused Flash']) {
+  for (const label of ['coredump (data/coredump)', 'nvs (data/nvs)', '未使用闪存']) {
     const segment = visualizerSegments.segments.find(entry => entry.title.includes(label))
 
     expect(segment).toBeDefined()
@@ -326,18 +326,18 @@ test('copies and imports CSV through clipboard actions', async ({ page, context 
   await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: 'http://127.0.0.1:4173' })
   await page.goto('/')
 
-  await openSelect(page, 'built-in-partitions-select', 'OTA With Spiffs')
+  await openSelect(page, 'built-in-partitions-select', 'OTA 带 SPIFFS')
   await expect(page.getByTestId('partition-card')).toHaveCount(6)
 
   await page.getByTestId('copy-csv-button').click()
-  await expect(page.getByTestId('alert-dialog')).toContainText('CSV copied')
+  await expect(page.getByTestId('alert-dialog')).toContainText('CSV 已复制')
 
   const copiedCsv = await page.evaluate(() => navigator.clipboard.readText())
   expect(copiedCsv).toContain('# Name,   Type, SubType, Offset,  Size, Flags')
   expect(copiedCsv).toContain('nvs,data,nvs,0x9000,0x5000,')
   expect(copiedCsv).toContain('coredump,data,coredump,0x3F0000,0x10000,')
 
-  await page.getByTestId('alert-dialog').getByRole('button', { name: 'Ok' }).click()
+  await page.getByTestId('alert-dialog').getByRole('button', { name: '确定' }).click()
   await page.getByTestId('clear-partitions-button').click()
   await expect(page.getByTestId('partition-card')).toHaveCount(0)
 
@@ -351,7 +351,7 @@ test('copies and imports CSV through clipboard actions', async ({ page, context 
 
   await expect(page.getByTestId('partition-card')).toHaveCount(2)
   await expect(page.getByText('app / factory')).toBeVisible()
-  await expect(page.getByTestId('alert-dialog')).toContainText('CSV imported')
+  await expect(page.getByTestId('alert-dialog')).toContainText('CSV 已导入')
 })
 
 test('shows OTA warning when OTA support has no NVS partition', async ({ page }) => {
@@ -370,5 +370,5 @@ test('shows OTA warning when OTA support has no NVS partition', async ({ page })
   })
 
   await expect(page.getByTestId('ota-nvs-warning')).toBeVisible()
-  await expect(page.getByText('NVS partition required')).toBeVisible()
+  await expect(page.getByText('需要 NVS 分区')).toBeVisible()
 })

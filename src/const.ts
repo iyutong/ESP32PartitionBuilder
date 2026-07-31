@@ -22,13 +22,13 @@ export const FLASH_SIZES = [
 ];
 
 export const PARTITION_TABLE_OFFSET_OPTIONS = [
-    { value: PARTITION_TABLE_OFFSET_DEFAULT, text: '0x8000 (Default)' },
-    { value: 0x18000, text: '0x18000 (Large bootloader)' }
-]
+    { value: PARTITION_TABLE_OFFSET_DEFAULT, text: '0x8000（默认）' },
+    { value: 0x18000, text: '0x18000（大型引导加载程序）' }
+  ]
 
 export const DISPLAY_SIZES = [
-    {value:1024, text:"Kilobytes (KB)"},
-    {value:1024*1024, text:"Megabytes (MB)"}
+    {value:1024, text:"千字节 (KB)"},
+    {value:1024*1024, text:"兆字节 (MB)"}
 ]
 export const PARTITION_TYPE_APP = "app"
 export const PARTITION_TYPE_DATA = "data"

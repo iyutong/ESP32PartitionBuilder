@@ -162,7 +162,7 @@ describe('PartitionTable', () => {
   it('rejects unaligned partition table offsets', () => {
     const table = new PartitionTable(4)
 
-    expect(() => table.setPartitionTableOffset(0x8100)).toThrow(/aligned to 0x1000/)
+    expect(() => table.setPartitionTableOffset(0x8100)).toThrow(/对齐到 0x1000/)
   })
 
   it('returns recommended sizes for known subtypes', () => {

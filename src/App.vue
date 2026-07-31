@@ -1,17 +1,17 @@
 <template>
   <v-app data-testid="app-shell">
-    <v-app-bar :title="'ESP32 Partition Builder v' + APP_VERSION">
+    <v-app-bar :title="'ESP32 分区构建器 v' + APP_VERSION">
       <div class="text-caption">
-        Tutorial
+        教程
       </div>
       <v-btn @click="goToYoutube" color="yellow" icon="mdi-open-in-new" variant="text"></v-btn>
       <v-btn color="yellow" @click="goToBuyMeACoffee">
-        ☕ Buymeacoffee
-        <v-tooltip activator="parent" location="top">Please support this project!</v-tooltip>
+        ☕ 请支持本项目
+        <v-tooltip activator="parent" location="top">请支持本项目！</v-tooltip>
       </v-btn>
       <v-btn @click="goToRepository" prepend-icon="mdi-help-box">
-        Get Help
-        <v-tooltip activator="parent" location="top">Help & Issues</v-tooltip>
+        获取帮助
+        <v-tooltip activator="parent" location="top">帮助与问题反馈</v-tooltip>
       </v-btn>
       <template v-slot:extension>
         <v-container v-if="activePage === 'partitionBuilder'" fluid class="mb-1 ml-1">
@@ -22,7 +22,7 @@
     <v-navigation-drawer permanent data-testid="sidebar" class="app-sidebar">
       <div class="app-sidebar__content">
         <v-list density="compact" nav>
-          <v-list-subheader class="app-sidebar__section-label">Sections</v-list-subheader>
+          <v-list-subheader class="app-sidebar__section-label">功能区</v-list-subheader>
           <v-list-item
             data-testid="partition-builder-nav"
             prepend-icon="mdi-table-cog"
@@ -30,19 +30,19 @@
             rounded="lg"
             @click="activePage = 'partitionBuilder'"
           >
-            <v-list-item-title>Partition Builder</v-list-item-title>
+            <v-list-item-title>分区构建器</v-list-item-title>
           </v-list-item>
         </v-list>
         <div v-show="activePage === 'partitionBuilder'" class="app-sidebar__controls">
           <div :class="availableMemoryColor()" data-testid="available-memory">
-            <div>Available Flash Memory:</div>
-            <div>{{ store.partitionTables.getUnallocatedMemory() }} bytes ({{
+            <div>可用闪存容量：</div>
+            <div>{{ store.partitionTables.getUnallocatedMemory() }} 字节 ({{
               store.hintDisplaySize(store.partitionTables.getUnallocatedMemory()) }})
             </div>
           </div>
           <v-select data-testid="built-in-partitions-select" v-model="selectedPartitionSet" :items="partitionOptions" item-value="value" item-title="text"
-            label="Built-in partitions" density="comfortable" hide-details></v-select>
-          <v-select data-testid="flash-size-select" v-model="store.flashSize" :items="FLASH_SIZES" item-value="value" item-title="text" label="Flash Size"
+            label="内置分区" density="comfortable" hide-details></v-select>
+          <v-select data-testid="flash-size-select" v-model="store.flashSize" :items="FLASH_SIZES" item-value="value" item-title="text" label="闪存大小"
             density="comfortable" hide-details @update:model-value="changeFlashSize"></v-select>
           <v-select
             data-testid="partition-table-offset-select"
@@ -50,7 +50,7 @@
             :items="PARTITION_TABLE_OFFSET_OPTIONS"
             item-value="value"
             item-title="text"
-            label="Partition Table Offset"
+            label="分区表偏移量"
             density="comfortable"
             hide-details
             @update:model-value="changePartitionTableOffset"
@@ -58,11 +58,11 @@
           <v-text-field
             data-testid="custom-offset-input"
             v-model="partitionTableOffsetText"
-            label="Custom Offset (hex)"
+            label="自定义偏移量（十六进制）"
             density="compact"
             hide-details="auto"
             persistent-hint
-            hint="Must align to 0x1000; leave CSV offsets blank to auto-align"
+            hint="必须对齐到 0x1000；将 CSV 偏移量留空以自动对齐"
             :rules="[customOffsetRule]"
             append-inner-icon="mdi-check"
             @click:append-inner="applyCustomPartitionTableOffset(partitionTableOffsetText)"
@@ -75,7 +75,7 @@
               :items="CHIP_TARGETS"
               item-value="value"
               item-title="text"
-              label="Target Chip"
+              label="目标芯片"
               density="comfortable"
               hide-details
             ></v-select>
@@ -84,15 +84,15 @@
               icon="mdi-information-outline"
               variant="text"
               density="comfortable"
-              aria-label="Show flashing hints"
+              aria-label="显示烧录提示"
               @click="showFlashingHintsDialog = true"
             ></v-btn>
           </div>
           <v-select data-testid="display-size-select" v-model="store.displaySizes" :items="DISPLAY_SIZES" item-value="value" item-title="text"
-            label="Show Hint Size in" density="comfortable" hide-details></v-select>
+            label="显示单位" density="comfortable" hide-details></v-select>
           <div v-if="store.partitionTables.hasOTAPartitions() && store.partitionTables.hasSubtype(PARTITION_NVS)" class="pl-2 pt-4">
             <v-icon color="green-darken-2" icon="mdi-wifi" size="large"></v-icon>
-            Over the air update capability
+            支持空中升级（OTA）
           </div>
           <v-alert
             data-testid="ota-nvs-warning"
@@ -104,28 +104,28 @@
             variant="outlined"
             icon="mdi-alert"
           >
-            <div class="font-weight-medium">NVS partition required</div>
-            <div class="text-body-2">Add an NVS partition to restore Over the Air update capability.</div>
+            <div class="font-weight-medium">需要 NVS 分区</div>
+            <div class="text-body-2">添加 NVS 分区以恢复空中升级（OTA）功能。</div>
           </v-alert>
           <div v-if="store.partitionTables.hasOTAPartitions()" class="px-3 pt-2">
             <v-switch
               v-model="asymmetricOtaSlots"
               data-testid="asymmetric-ota-toggle"
-              label="Allow unequal OTA slots"
+              label="允许不相等 OTA 插槽"
               color="primary"
               density="compact"
               hide-details
             ></v-switch>
             <div v-if="asymmetricOtaSlots" data-testid="asymmetric-ota-warning" class="text-caption pt-1">
-              Advanced: updates must fit the inactive slot. A small staging firmware may be needed before a larger image.
+              高级：更新必须适合非活动插槽。在刷写更大的镜像之前，可能需要一个小型引导固件。
             </div>
-            <div v-else class="text-caption pt-1">Keep slots equal for standard alternating OTA updates.</div>
+            <div v-else class="text-caption pt-1">保持插槽相等以进行标准的交替 OTA 更新。</div>
           </div>
         </div>
         <div class="app-sidebar__resources" data-testid="resources-section">
           <v-divider class="mb-2"></v-divider>
           <v-list density="compact" nav>
-            <v-list-subheader class="app-sidebar__section-label">Resources</v-list-subheader>
+            <v-list-subheader class="app-sidebar__section-label">资源</v-list-subheader>
             <v-list-item
               v-for="link in resourceLinks"
               :key="link.href"
@@ -144,7 +144,7 @@
               rounded="lg"
               @click="activePage = 'makerTools'"
             >
-              <v-list-item-title>Maker Tools</v-list-item-title>
+              <v-list-item-title>创客工具</v-list-item-title>
             </v-list-item>
           </v-list>
         </div>
@@ -160,34 +160,34 @@
     <v-snackbar v-model="showUrlNotification" location="top" data-testid="url-notification">
       {{ urlNotificationText }}
       <template #actions>
-        <v-btn text @click="showUrlNotification = false">Close</v-btn>
+        <v-btn text @click="showUrlNotification = false">关闭</v-btn>
       </template>
     </v-snackbar>
     <v-dialog v-model="showFlashingHintsDialog" width="560" data-testid="flashing-hints-dialog">
       <v-card color="white" class="flashing-dialog">
-        <v-card-title class="flashing-dialog__title">{{ selectedChipTarget.text }} flashing hints</v-card-title>
+        <v-card-title class="flashing-dialog__title">{{ selectedChipTarget.text }} 烧录提示</v-card-title>
         <v-card-text class="flashing-dialog__body">
           <div class="flashing-hints" data-testid="flashing-hints">
             <div class="flashing-hints__grid">
               <div class="flashing-hints__item">
-                <span>Chip flag</span>
+                <span>芯片参数</span>
                 <code>--chip {{ selectedChipTarget.esptoolChip }}</code>
               </div>
               <div class="flashing-hints__item">
-                <span>Bootloader</span>
+                <span>引导加载程序</span>
                 <code>{{ formatHex(selectedChipTarget.bootloaderOffset) }}</code>
               </div>
               <div class="flashing-hints__item">
-                <span>Partition table</span>
+                <span>分区表</span>
                 <code>{{ formatHex(store.partitionTableOffset) }}</code>
               </div>
               <div class="flashing-hints__item">
-                <span>App image</span>
+                <span>应用镜像</span>
                 <code>{{ formatHex(firstAppPartitionOffset) }}</code>
               </div>
             </div>
             <div class="flashing-hints__command-group">
-              <div class="flashing-hints__label">Command shape</div>
+              <div class="flashing-hints__label">命令格式</div>
               <code class="flashing-hints__command" data-testid="flashing-command">{{ flashingCommandPreview }}</code>
             </div>
             <v-alert
@@ -198,15 +198,15 @@
               variant="tonal"
               class="mt-3"
             >
-              Arduino uploads must be configured for app offset {{ formatHex(firstAppPartitionOffset) }}; otherwise the sketch can still be written to {{ formatHex(OFFSET_APP_TYPE) }}.
+              Arduino 上传必须配置为应用偏移量 {{ formatHex(firstAppPartitionOffset) }}；否则固件可能仍会被写入 {{ formatHex(OFFSET_APP_TYPE) }}。
             </v-alert>
             <div class="flashing-hints__note">
-              Convert the CSV to <code>partition-table.bin</code> with <code>gen_esp32part.py</code> before flashing.
+              烧录前，使用 <code>gen_esp32part.py</code> 将 CSV 转换为 <code>partition-table.bin</code>。
             </div>
           </div>
         </v-card-text>
         <v-card-actions>
-          <v-btn class="ms-auto" text="Close" @click="showFlashingHintsDialog = false"></v-btn>
+          <v-btn class="ms-auto" text="关闭" @click="showFlashingHintsDialog = false"></v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -264,22 +264,22 @@ const partitionTableOffsetText = ref(formatHex(store.partitionTableOffset));
 const selectedChipTargetId = ref(CHIP_TARGETS[0]?.value ?? 'esp32');
 
 const partitionOptions = esp32Partitions.map(set => ({
-  text: set.name,
+  text: set.label ?? set.name,
   value: set.name
 }));
 const resourceLinks = [
   {
-    title: 'Tutorial',
+    title: '教程',
     href: 'https://youtu.be/EuHxodrye6E',
     icon: 'mdi-youtube'
   },
   {
-    title: 'Buy Me a Coffee',
+    title: '请我喝杯咖啡',
     href: 'https://buymeacoffee.com/thelastoutpostworkshop',
     icon: 'mdi-coffee'
   },
   {
-    title: 'Get Help',
+    title: '获取帮助',
     href: 'https://github.com/thelastoutpostworkshop/ESP32PartitionBuilder',
     icon: 'mdi-lifebuoy'
   }
@@ -375,13 +375,13 @@ function formatHex(value: number): string {
 function customOffsetRule(value: string): true | string {
   const parsed = parseOffset(value);
   if (parsed === null) {
-    return 'Enter a hex offset, e.g. 0x8000';
+    return '请输入十六进制偏移量，例如 0x8000';
   }
   if (parsed % OFFSET_DATA_TYPE !== 0) {
-    return 'Must align to 0x1000';
+    return '必须对齐到 0x1000';
   }
   if ((parsed + PARTITION_TABLE_SIZE) >= store.flashSizeBytes) {
-    return 'Offset too large for flash size';
+    return '偏移量超出闪存大小';
   }
   return true;
 }
