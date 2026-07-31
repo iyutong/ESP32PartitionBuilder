@@ -1,18 +1,6 @@
 <template>
   <v-app data-testid="app-shell">
     <v-app-bar :title="'ESP32 分区构建器 v' + APP_VERSION">
-      <div class="text-caption">
-        教程
-      </div>
-      <v-btn @click="goToYoutube" color="yellow" icon="mdi-open-in-new" variant="text"></v-btn>
-      <v-btn color="yellow" @click="goToBuyMeACoffee">
-        ☕ 请支持本项目
-        <v-tooltip activator="parent" location="top">请支持本项目！</v-tooltip>
-      </v-btn>
-      <v-btn @click="goToRepository" prepend-icon="mdi-help-box">
-        获取帮助
-        <v-tooltip activator="parent" location="top">帮助与问题反馈</v-tooltip>
-      </v-btn>
       <template v-slot:extension>
         <v-container v-if="activePage === 'partitionBuilder'" fluid class="mb-1 ml-1">
           <partition-visualizer></partition-visualizer>
@@ -121,32 +109,6 @@
             </div>
             <div v-else class="text-caption pt-1">保持插槽相等以进行标准的交替 OTA 更新。</div>
           </div>
-        </div>
-        <div class="app-sidebar__resources" data-testid="resources-section">
-          <v-divider class="mb-2"></v-divider>
-          <v-list density="compact" nav>
-            <v-list-subheader class="app-sidebar__section-label">资源</v-list-subheader>
-            <v-list-item
-              v-for="link in resourceLinks"
-              :key="link.href"
-              :href="link.href"
-              :prepend-icon="link.icon"
-              target="_blank"
-              rel="noopener"
-              rounded="lg"
-            >
-              <v-list-item-title>{{ link.title }}</v-list-item-title>
-            </v-list-item>
-            <v-list-item
-              data-testid="maker-tools-nav"
-              prepend-icon="mdi-tools"
-              :active="activePage === 'makerTools'"
-              rounded="lg"
-              @click="activePage = 'makerTools'"
-            >
-              <v-list-item-title>创客工具</v-list-item-title>
-            </v-list-item>
-          </v-list>
         </div>
       </div>
     </v-navigation-drawer>
@@ -267,23 +229,6 @@ const partitionOptions = esp32Partitions.map(set => ({
   text: set.label ?? set.name,
   value: set.name
 }));
-const resourceLinks = [
-  {
-    title: '教程',
-    href: 'https://youtu.be/EuHxodrye6E',
-    icon: 'mdi-youtube'
-  },
-  {
-    title: '请我喝杯咖啡',
-    href: 'https://buymeacoffee.com/thelastoutpostworkshop',
-    icon: 'mdi-coffee'
-  },
-  {
-    title: '获取帮助',
-    href: 'https://github.com/thelastoutpostworkshop/ESP32PartitionBuilder',
-    icon: 'mdi-lifebuoy'
-  }
-];
 
 watch(selectedPartitionSet, () => {
   loadPartitions();
