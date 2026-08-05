@@ -138,7 +138,7 @@
           </v-col>
         </v-row>
         <v-slider :color="partitionAccentColor(partition, index)"
-          :track-color="partitionAccentTrackColor(partition, index)" v-model="partition.size" thumb-label label="Size"
+          :track-color="partitionAccentTrackColor(partition, index)" v-model="partition.size" thumb-label label="大小"
           :disabled="partition.subtype === 'ota_0' && isPairedOtaSlot(partition) && !asymmetricOtaSlots"
           :max="store.partitionTables.getTotalMemory()" @end="updateSize(partition)" density="comfortable" hide-details
           :step="stepSize(partition)" :min="stepSize(partition)">
