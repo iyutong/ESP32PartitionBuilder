@@ -78,6 +78,13 @@ export function loadPartitionsFromCsv(
     const isAppPartition = type === PARTITION_TYPE_APP;
     const alignment = isAppPartition ? OFFSET_APP_TYPE : OFFSET_DATA_TYPE;
     let offset: number;
+    // A partition is only "fixed" when its CSV offset deliberately leaves a gap
+    // before it. Packed (gap-free) offsets match natural auto-allocation and stay
+    // editable so URL-loaded standard layouts remain draggable. See issue: after
+    // URL load, drag-resize and auto offset calculation broke because every CSV
+    // row carries an offset (buildPartitionCsv always writes one), which made
+    // every partition fixed.
+    let fixedOffset = false;
 
     if (offsetHex) {
       const parsedOffset = parseInt(offsetHex, 16);
@@ -103,6 +110,11 @@ export function loadPartitionsFromCsv(
           text: `应用分区偏移量必须在或之后 ${formatHex(OFFSET_APP_TYPE)} 且使用对齐 ${formatHex(OFFSET_APP_TYPE)}。`
         };
       }
+      const naturalBaseline = isAppPartition
+        ? Math.max(nextOffset, OFFSET_APP_TYPE, baseOffset)
+        : Math.max(nextOffset, baseOffset);
+      const naturalOffset = alignOffset(naturalBaseline, alignment);
+      fixedOffset = offset > naturalOffset;
       nextOffset = offset + size;
     } else {
       if (isAppPartition) {
@@ -121,7 +133,7 @@ export function loadPartitionsFromCsv(
       size,
       offset,
       flags: flags || '',
-      fixedOffset: Boolean(offsetHex),
+      fixedOffset,
       custom: isCustomPartition(type, subtype, size, flags || '')
     });
     requiredFlashSize = Math.max(requiredFlashSize, offset + size);

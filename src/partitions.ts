@@ -241,11 +241,29 @@ export class PartitionTable {
     const baseOffset = this.getPartitionTableBaseOffset();
     const otadataRequiredOffset = this.getOtadataRequiredOffset();
 
-    if (this.hasFixedOffsets()) {
-      this.partitions.sort((a, b) => a.offset - b.offset);
-      return;
+    // When fixed-offset partitions are present we cannot reorder (doing so would
+    // violate their locked positions). Skip the otadata / app-first reordering
+    // and only recompute offsets for non-fixed partitions, preserving fixed ones.
+    // Previously this branch bailed out entirely, which froze every offset and
+    // broke auto-calculation for URL-loaded layouts that contained any gap.
+    if (!this.hasFixedOffsets()) {
+      this.reorderPartitions(baseOffset, otadataRequiredOffset);
     }
 
+    this.applyOffsetCalculation();
+  }
+
+  /**
+   * Recomputes offsets in-place without reordering the partition array. Safe to
+   * call during slider drag (no splice/sort, so v-for with index keys stays
+   * stable). Fixed-offset partitions keep their offset; non-fixed partitions are
+   * packed after the previous partition.
+   */
+  recomputeOffsetsInPlace() {
+    this.applyOffsetCalculation();
+  }
+
+  private reorderPartitions(baseOffset: number, otadataRequiredOffset: number) {
     const otadataIndex = this.partitions.findIndex(partition => partition.subtype === PARTITION_OTA);
 
     if (otadataIndex !== -1) {
@@ -341,12 +359,28 @@ export class PartitionTable {
         this.partitions.splice(0, this.partitions.length, ...newOrder);
       }
     }
+  }
 
+  /**
+   * Assigns offsets to every non-fixed partition in array order, packing each one
+   * after the previous partition. Fixed partitions keep their offset and act as
+   * anchors. For the all-non-fixed case this matches the previous behavior (after
+   * reorderPartitions has run); for the mixed case it keeps fixed offsets intact
+   * while still auto-calculating the rest.
+   */
+  private applyOffsetCalculation() {
+    const baseOffset = this.getPartitionTableBaseOffset();
+    const otadataRequiredOffset = this.getOtadataRequiredOffset();
     let currentOffset = baseOffset;
 
     this.partitions.forEach(partition => {
+      if (partition.fixedOffset) {
+        currentOffset = Math.max(currentOffset, partition.offset + partition.size);
+        return;
+      }
+
       if (partition.subtype === PARTITION_OTA) {
-        partition.offset = otadataRequiredOffset;
+        partition.offset = Math.max(otadataRequiredOffset, this.alignOffset(currentOffset, OFFSET_DATA_TYPE));
         currentOffset = partition.offset + partition.size;
         return;
       }

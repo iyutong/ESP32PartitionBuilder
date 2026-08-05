@@ -140,7 +140,7 @@
         <v-slider :color="partitionAccentColor(partition, index)"
           :track-color="partitionAccentTrackColor(partition, index)" v-model="partition.size" thumb-label label="大小"
           :disabled="isPairedOtaSlot(partition) && !asymmetricOtaSlots"
-          :max="store.partitionTables.getTotalMemory()" @end="updateSize(partition)" density="comfortable" hide-details
+          :max="maxPartitionSize(partition)" @update:model-value="onSizeInput" @end="updateSize(partition)" density="comfortable" hide-details
           :step="stepSize(partition)" :min="stepSize(partition)">
           <template v-slot:prepend>
             <v-tooltip location="top">
@@ -605,6 +605,17 @@ const getSubtypes = (type: string) => {
 
 const updateSize = (partition: Partition) => {
   store.partitionTables.updatePartitionSize(partition, partition.size);
+};
+
+const maxPartitionSize = (partition: Partition): number => {
+  return store.partitionTables.getMaxPartitionSize(partition);
+};
+
+const onSizeInput = () => {
+  // Recompute offsets in real time while dragging so the visualizer and offset
+  // fields stay in sync. This variant does not reorder the partition array, so
+  // the v-for (keyed by index) stays stable and the active slider keeps control.
+  store.partitionTables.recomputeOffsetsInPlace();
 };
 
 
