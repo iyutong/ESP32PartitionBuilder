@@ -139,7 +139,7 @@
         </v-row>
         <v-slider :color="partitionAccentColor(partition, index)"
           :track-color="partitionAccentTrackColor(partition, index)" v-model="partition.size" thumb-label label="大小"
-          :disabled="partition.subtype === 'ota_0' && isPairedOtaSlot(partition) && !asymmetricOtaSlots"
+          :disabled="isPairedOtaSlot(partition) && !asymmetricOtaSlots"
           :max="store.partitionTables.getTotalMemory()" @end="updateSize(partition)" density="comfortable" hide-details
           :step="stepSize(partition)" :min="stepSize(partition)">
           <template v-slot:prepend>
@@ -634,7 +634,7 @@ const addPartition = () => {
 
 const addNVSPartition = () => {
   if (store.partitionTables.getAvailableMemory() < NVS_PARTITION_SIZE_RECOMMENDED) {
-    showAlertMessage("无法添加NVS分区", `当前没有可用的闪存内存,请删除现有分区或调整现有分区大小。NVS分区大小必须至少 ${NVS_PARTITION_SIZE_RECOMMENDED} 字节 (${store.hintDisplaySize(NVS_PARTITION_SIZE_RECOMMENDED)}。`)
+    showAlertMessage("无法添加NVS分区", `当前没有可用的闪存内存,请删除现有分区或调整现有分区大小。NVS分区大小必须至少 ${NVS_PARTITION_SIZE_RECOMMENDED} 字节 (${store.hintDisplaySize(NVS_PARTITION_SIZE_RECOMMENDED)})。`)
   } else {
     const newName = generatePartitionName("nvs");
     store.partitionTables.addPartition(newName, PARTITION_TYPE_DATA, PARTITION_NVS, NVS_PARTITION_SIZE_RECOMMENDED, "")
@@ -643,7 +643,7 @@ const addNVSPartition = () => {
 
 const addFATPartition = () => {
   if (store.partitionTables.getAvailableMemory() < FAT_MIN_PARTITION_SIZE) {
-    showAlertMessage("无法添加FAT分区", `当前没有可用的闪存内存,请删除现有分区或调整现有分区大小。FAT分区大小必须至少 ${FAT_MIN_PARTITION_SIZE} 字节 (${store.hintDisplaySize(FAT_MIN_PARTITION_SIZE)}。`)
+    showAlertMessage("无法添加FAT分区", `当前没有可用的闪存内存,请删除现有分区或调整现有分区大小。FAT分区大小必须至少 ${FAT_MIN_PARTITION_SIZE} 字节 (${store.hintDisplaySize(FAT_MIN_PARTITION_SIZE)})。`)
   } else {
     const newName = generatePartitionName("fat");
     store.partitionTables.addPartition(newName, PARTITION_TYPE_DATA, PARTITION_FAT, FAT_MIN_PARTITION_SIZE, "")
@@ -667,7 +667,7 @@ const addLittleFSPartition = () => {
 };
 const addCoreDumpPartition = () => {
   if (store.partitionTables.getAvailableMemory() < COREDUMP_MIN_PARTITION_SIZE) {
-    showAlertMessage("无法添加Core Dump分区", `当前没有可用的闪存内存,请删除现有分区或调整现有分区大小。Core Dump分区大小必须至少 ${COREDUMP_MIN_PARTITION_SIZE} 字节 (${store.hintDisplaySize(COREDUMP_MIN_PARTITION_SIZE)}。`)
+    showAlertMessage("无法添加Core Dump分区", `当前没有可用的闪存内存,请删除现有分区或调整现有分区大小。Core Dump分区大小必须至少 ${COREDUMP_MIN_PARTITION_SIZE} 字节 (${store.hintDisplaySize(COREDUMP_MIN_PARTITION_SIZE)})。`)
   } else {
     const newName = generatePartitionName("coredump");
     store.partitionTables.addPartition(newName, PARTITION_TYPE_DATA, PARTITION_COREDUMP, COREDUMP_MIN_PARTITION_SIZE, "")
@@ -675,7 +675,7 @@ const addCoreDumpPartition = () => {
 };
 const addPhyPartition = () => {
   if (store.partitionTables.getAvailableMemory() < PHY_MIN_PARTITION_SIZE) {
-    showAlertMessage("无法添加PHY分区", `当前没有可用的闪存内存,请删除现有分区或调整现有分区大小。PHY分区大小必须至少 ${PHY_MIN_PARTITION_SIZE} 字节 (${store.hintDisplaySize(PHY_MIN_PARTITION_SIZE)}。`)
+    showAlertMessage("无法添加PHY分区", `当前没有可用的闪存内存,请删除现有分区或调整现有分区大小。PHY分区大小必须至少 ${PHY_MIN_PARTITION_SIZE} 字节 (${store.hintDisplaySize(PHY_MIN_PARTITION_SIZE)})。`)
   } else {
     const newName = generatePartitionName("phy");
     store.partitionTables.addPartition(newName, PARTITION_TYPE_DATA, PARTITION_PHY, PHY_MIN_PARTITION_SIZE, "")
@@ -683,7 +683,7 @@ const addPhyPartition = () => {
 };
 const addCustomPartition = () => {
   if (store.partitionTables.getAvailableMemory() < OFFSET_DATA_TYPE) {
-    showAlertMessage("无法添加自定义分区", `当前没有可用的闪存内存,请删除现有分区或调整现有分区大小。自定义分区大小必须至少 ${OFFSET_DATA_TYPE} 字节 (${store.hintDisplaySize(OFFSET_DATA_TYPE)}。`)
+    showAlertMessage("无法添加自定义分区", `当前没有可用的闪存内存,请删除现有分区或调整现有分区大小。自定义分区大小必须至少 ${OFFSET_DATA_TYPE} 字节 (${store.hintDisplaySize(OFFSET_DATA_TYPE)})。`)
   } else {
     const newName = generatePartitionName("custom");
     store.partitionTables.addPartition(newName, PARTITION_TYPE_DATA, PARTITION_FAT, OFFSET_DATA_TYPE, "", undefined, false, true)
@@ -691,7 +691,7 @@ const addCustomPartition = () => {
 };
 const addFactoryPartition = () => {
   if (store.partitionTables.getAvailableMemory() < OFFSET_APP_TYPE) {
-    showAlertMessage("无法添加Factory App分区", `当前没有可用的闪存内存,请删除现有分区或调整现有分区大小。Factory App分区大小必须至少 ${OFFSET_APP_TYPE} 字节 (${store.hintDisplaySize(OFFSET_APP_TYPE)}。`)
+    showAlertMessage("无法添加Factory App分区", `当前没有可用的闪存内存,请删除现有分区或调整现有分区大小。Factory App分区大小必须至少 ${OFFSET_APP_TYPE} 字节 (${store.hintDisplaySize(OFFSET_APP_TYPE)})。`)
   } else {
     const newName = generatePartitionName("factory");
     store.partitionTables.addPartition(newName, PARTITION_TYPE_APP, PARTITION_FACTORY, OFFSET_APP_TYPE, "")
@@ -699,7 +699,7 @@ const addFactoryPartition = () => {
 };
 const addTestPartition = () => {
   if (store.partitionTables.getAvailableMemory() < OFFSET_APP_TYPE) {
-    showAlertMessage("无法添加Test App分区", `当前没有可用的闪存内存,请删除现有分区或调整现有分区大小。Test App分区大小必须至少 ${OFFSET_APP_TYPE} 字节 (${store.hintDisplaySize(OFFSET_APP_TYPE)}。`)
+    showAlertMessage("无法添加Test App分区", `当前没有可用的闪存内存,请删除现有分区或调整现有分区大小。Test App分区大小必须至少 ${OFFSET_APP_TYPE} 字节 (${store.hintDisplaySize(OFFSET_APP_TYPE)})。`)
   } else {
     const newName = generatePartitionName("test");
     store.partitionTables.addPartition(newName, PARTITION_TYPE_APP, PARTITION_TEST, OFFSET_APP_TYPE, "")
@@ -707,7 +707,7 @@ const addTestPartition = () => {
 };
 const addOTADataPartition = () => {
   if (store.partitionTables.getAvailableMemory() < OTA_DATA_PARTITION_SIZE) {
-    showAlertMessage("无法添加OTA Data分区", `当前没有可用的闪存内存,请删除现有分区或调整现有分区大小。OTA Data分区大小必须至少 ${OTA_DATA_PARTITION_SIZE} 字节 (${store.hintDisplaySize(OTA_DATA_PARTITION_SIZE)}。`)
+    showAlertMessage("无法添加OTA Data分区", `当前没有可用的闪存内存,请删除现有分区或调整现有分区大小。OTA Data分区大小必须至少 ${OTA_DATA_PARTITION_SIZE} 字节 (${store.hintDisplaySize(OTA_DATA_PARTITION_SIZE)})。`)
     return
   }
   if (store.partitionTables.hasSubtype(PARTITION_OTA)) {
@@ -785,7 +785,7 @@ const resizeToFit = (partition: Partition) => {
     if (resizeOnOta) {
       store.partitionTables.updatePartitionSize(partition, Math.round(resize / 2));
       if (store.partitionTables.getAvailableMemory() < 0) {
-        store.partitionTables.updatePartitionSize(partition, partition.size + store.partitionTables.getAvailableMemory());
+        store.partitionTables.updatePartitionSize(partition, partition.size + Math.floor(store.partitionTables.getAvailableMemory() / 2));
       }
     } else {
       store.partitionTables.updatePartitionSize(partition, resize);

@@ -249,13 +249,13 @@ const flashingCommandPreview = computed(() => {
 });
 
 function availableMemoryColor(): string {
+  if (store.partitionTables.getAvailableMemory() < 0) {
+    return 'pa-4 text-red'
+  }
   if (store.partitionTables.getUnallocatedMemory() == 0) {
     return 'pa-4 text-green'
   }
-  if (store.partitionTables.getUnallocatedMemory() > 0) {
-    return 'pa-4 text-yellow'
-  }
-  return 'pa-4 text-red'
+  return 'pa-4 text-yellow'
 }
 
 function changeFlashSize() {
