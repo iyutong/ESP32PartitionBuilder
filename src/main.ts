@@ -53,10 +53,10 @@ if (csvPayload) {
   })
   if (error) {
     urlPartitionMessage.value = `${error.title}: ${error.text}`
-    console.warn('从 URL 加载分区失败:', error.title, error.text)
+    console.warn('Failed to load partitions from URL:', error.title, error.text)
   } else {
-    const flashMessage = resolvedFlashSize ? ` 使用 ${resolvedFlashSize} MB 闪存大小` : ''
-    urlPartitionMessage.value = `已从 URL 加载分区${flashMessage}`
+    const flashMessage = resolvedFlashSize ? ` using ${resolvedFlashSize} MB flash size` : ''
+    urlPartitionMessage.value = `Loaded partitions from URL${flashMessage}`
   }
 }
 app.use(vuetify)

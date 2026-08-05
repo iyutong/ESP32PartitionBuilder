@@ -12,8 +12,8 @@ describe('partitionStore', () => {
     const store = partitionStore()
 
     expect(DISPLAY_SIZES).toEqual([
-      { value: 1024, text: '千字节 (KB)' },
-      { value: 1024 * 1024, text: '兆字节 (MB)' }
+      { value: 1024, text: 'Kilobytes (KB)' },
+      { value: 1024 * 1024, text: 'Megabytes (MB)' }
     ])
     expect(store.hintDisplaySize(4096)).toBe('4 KB')
 

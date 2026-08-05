@@ -60,7 +60,7 @@ const partitionSegments = computed<PartitionSegment[]>(() => {
       id: `${kind}-${startOffset}`,
       name: label,
       meta: store.hintDisplaySize(length),
-      title: `${label}\n偏移量: ${formatHex(startOffset)} - ${formatHex(startOffset + length)} (${store.hintDisplaySize(length)})`,
+      title: `${label}\nOffset: ${formatHex(startOffset)} - ${formatHex(startOffset + length)} (${store.hintDisplaySize(length)})`,
       kind,
       showMeta: percentage > 9,
       baseColor,
@@ -69,14 +69,14 @@ const partitionSegments = computed<PartitionSegment[]>(() => {
   };
 
   if (partitions.length === 0) {
-    addGapSegment(flashSize, 0, '未分配闪存', 'free');
+    addGapSegment(flashSize, 0, 'Unallocated Flash', 'free');
     return finalizeSegments(segments);
   }
 
   partitions.forEach((partition, index) => {
     if (partition.offset > cursor) {
       const gapKind = cursor === 0 ? 'reserved' : 'free';
-      const label = cursor === 0 ? '保留' : '可用空间';
+      const label = cursor === 0 ? 'Reserved' : 'Free Space';
       addGapSegment(partition.offset - cursor, cursor, label, gapKind);
       cursor = partition.offset;
     }
@@ -88,12 +88,12 @@ const partitionSegments = computed<PartitionSegment[]>(() => {
     const end = start + length;
 
     segments.push({
-      id: `partition-${partition.name || '未命名'}-${index}`,
-      name: partition.name || '未命名',
+      id: `partition-${partition.name || 'unnamed'}-${index}`,
+      name: partition.name || 'Unnamed',
       meta: store.hintDisplaySize(length),
-      title: `${partition.name || '分区'} (${partition.type}/${partition.subtype})` +
-        `\n大小: ${store.hintDisplaySize(length)} (${length} 字节)` +
-        `\n偏移量: ${formatHex(start)} - ${formatHex(end)}`,
+      title: `${partition.name || 'Partition'} (${partition.type}/${partition.subtype})` +
+        `\nSize: ${store.hintDisplaySize(length)} (${length} bytes)` +
+        `\nOffset: ${formatHex(start)} - ${formatHex(end)}`,
       kind: 'partition',
       showMeta: percentage > 8,
       baseColor,
@@ -104,7 +104,7 @@ const partitionSegments = computed<PartitionSegment[]>(() => {
   });
 
   if (cursor < flashSize) {
-    addGapSegment(flashSize - cursor, cursor, '未使用闪存', 'free');
+    addGapSegment(flashSize - cursor, cursor, 'Unused Flash', 'free');
   }
 
   return finalizeSegments(segments);

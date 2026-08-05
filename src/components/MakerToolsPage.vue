@@ -28,7 +28,7 @@ const makerTools: MakerTool[] = [
     title: 'ESP Board Vault',
     icon: 'mdi-database-lock-outline',
     description:
-      '一款面向 ESP32 创客的本地化桌面库存应用，用于扫描、识别、整理和跟踪开发板，包括硬件详情、分区图、照片、项目、清单和备份。',
+      'A local-first desktop inventory app for ESP32 makers to scan, identify, organize, and track boards with hardware details, partition maps, photos, projects, checklists, and backups.',
     thumbnailSrc: espBoardVaultThumbnail,
     sourceUrl: 'https://github.com/thelastoutpostworkshop/ESPVault',
     sourceLabel: 'thelastoutpostworkshop/ESPVault',
@@ -39,7 +39,7 @@ const makerTools: MakerTool[] = [
     title: 'ESPConnect',
     icon: 'mdi-connection',
     description:
-      '一款基于浏览器的 ESP 设备实用工具。完全在现代 Chromium 浏览器中运行，可检查硬件详情、管理 SPIFFS、FAT 和 LittleFS 文件、备份闪存以及部署固件。',
+      'A browser-based utility for working with ESP devices. It runs entirely inside a modern Chromium browser so you can inspect hardware details, manage SPIFFS, FAT, and LittleFS files, back up flash, and deploy firmware.',
     thumbnailSrc: espConnectThumbnail,
     url: 'https://thelastoutpostworkshop.github.io/ESPConnect/',
     sourceUrl: 'https://github.com/thelastoutpostworkshop/ESPConnect',
@@ -51,7 +51,7 @@ const makerTools: MakerTool[] = [
     title: 'ESP32 Partition Builder',
     icon: 'mdi-table-cog',
     description:
-      '一款用于为 ESP32 开发板规划和创建自定义分区布局的 Web 工具。',
+      'A web tool to plan and create custom partition layouts for ESP32 boards.',
     thumbnailSrc: partitionBuilderThumbnail,
     url: 'https://thelastoutpostworkshop.github.io/ESP32PartitionBuilder/',
     sourceUrl: 'https://github.com/thelastoutpostworkshop/ESP32PartitionBuilder',
@@ -63,7 +63,7 @@ const makerTools: MakerTool[] = [
     title: 'Video Conversion Studio',
     icon: 'mdi-movie-cog-outline',
     description:
-      '将视频和音频素材转换为适合 ESP32 显示项目的输出格式。',
+      'Converts video and audio assets into output that fits ESP32 display projects.',
     thumbnailSrc: videoConversionThumbnail,
     url: 'https://thelastoutpostworkshop.github.io/video_conversion/',
     sourceUrl: 'https://github.com/thelastoutpostworkshop/video_conversion',
@@ -75,10 +75,10 @@ const makerTools: MakerTool[] = [
     title: 'GPIOViewer',
     icon: 'mdi-chip',
     description:
-      '一款基于浏览器的实时 GPIO 引脚活动查看器，用于检查引脚状态、确认开发板行为以及排查接线或信号活动。',
+      'A browser-based real-time GPIO pin activity viewer for inspecting pin states, confirming board behavior, and troubleshooting wiring or signal activity.',
     thumbnailSrc: gpioViewerThumbnail,
     url: 'https://www.youtube.com/watch?v=JJzRXcQrl3I',
-    actionLabel: '观看教程',
+    actionLabel: 'Watch tutorial',
     actionIcon: 'mdi-youtube',
     sourceUrl: 'https://github.com/thelastoutpostworkshop/gpio_viewer',
     sourceLabel: 'thelastoutpostworkshop/gpio_viewer'
@@ -88,10 +88,10 @@ const makerTools: MakerTool[] = [
     title: 'Arduino Maker Workshop',
     icon: 'mdi-microsoft-visual-studio-code',
     description:
-      '一款面向 Arduino 创客开发的 VS Code 扩展，提供以草图为驱动的项目和面向开发板迭代的专注编辑工作流。',
+      'A VS Code extension for Arduino-centered maker development with a focused editor workflow for sketch-driven projects and board-oriented iteration.',
     thumbnailSrc: arduinoMakerWorkshopThumbnail,
     url: 'https://marketplace.visualstudio.com/items?itemName=TheLastOutpostWorkshop.arduino-maker-workshop',
-    sourceLabel: 'VS Code Marketplace 扩展',
+    sourceLabel: 'VS Code Marketplace extension',
     tutorialUrl: 'https://www.youtube.com/watch?v=rduTUUVkzqM'
   }
 ];
@@ -101,23 +101,23 @@ const makerTools: MakerTool[] = [
   <v-container data-testid="maker-tools-page" class="maker-tools-page" fluid>
     <section class="maker-tools-page__header">
       <div>
-        <h1>创客工具</h1>
-        <p>The Last Outpost Workshop 为 ESP32 和嵌入式项目提供的创客实用工具。</p>
+        <h1>Maker Tools</h1>
+        <p>Maker utilities from The Last Outpost Workshop for ESP32 and embedded projects.</p>
       </div>
     </section>
 
     <section class="maker-tools-page__support">
       <v-icon icon="mdi-coffee-outline" size="32"></v-icon>
       <div class="maker-tools-page__support-copy">
-        <h2>支持项目</h2>
-        <p>这些创客工具是免费使用的。如果它们对你的工作有帮助，请喝杯咖啡支持持续开发。</p>
+        <h2>Support the project</h2>
+        <p>These maker utilities are free to use. If they help at your bench, a coffee supports ongoing development.</p>
       </div>
       <v-btn prepend-icon="mdi-coffee-outline" :href="coffeeUrl" target="_blank" rel="noopener">
-        请我喝杯咖啡
+        Buy Me a Coffee
       </v-btn>
     </section>
 
-    <section class="maker-tools-page__grid" aria-label="创客工具">
+    <section class="maker-tools-page__grid" aria-label="Maker Tools">
       <v-card
         v-for="tool in makerTools"
         :key="tool.key"
@@ -130,9 +130,9 @@ const makerTools: MakerTool[] = [
           :href="tool.tutorialUrl ?? tool.url ?? tool.sourceUrl"
           target="_blank"
           rel="noopener"
-          :aria-label="`${tool.title} 教程或工具链接`"
+          :aria-label="`${tool.title} tutorial or tool link`"
         >
-          <img :src="tool.thumbnailSrc" :alt="`${tool.title} 缩略图`" loading="lazy">
+          <img :src="tool.thumbnailSrc" :alt="`${tool.title} thumbnail`" loading="lazy">
           <span class="maker-tools-page__media-icon" aria-hidden="true">
             <v-icon :icon="tool.icon" size="20"></v-icon>
           </span>
@@ -165,7 +165,7 @@ const makerTools: MakerTool[] = [
             target="_blank"
             rel="noopener"
           >
-            观看教程
+            Watch tutorial
           </v-btn>
           <v-spacer></v-spacer>
           <v-btn
@@ -176,7 +176,7 @@ const makerTools: MakerTool[] = [
             target="_blank"
             rel="noopener"
           >
-            {{ tool.actionLabel ?? '打开工具' }}
+            {{ tool.actionLabel ?? 'Open tool' }}
           </v-btn>
         </v-card-actions>
       </v-card>
