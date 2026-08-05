@@ -69,14 +69,14 @@ const partitionSegments = computed<PartitionSegment[]>(() => {
   };
 
   if (partitions.length === 0) {
-    addGapSegment(flashSize, 0, 'Unallocated Flash', 'free');
+    addGapSegment(flashSize, 0, '未分配的闪存', 'free');
     return finalizeSegments(segments);
   }
 
   partitions.forEach((partition, index) => {
     if (partition.offset > cursor) {
       const gapKind = cursor === 0 ? 'reserved' : 'free';
-      const label = cursor === 0 ? 'Reserved' : 'Free Space';
+      const label = cursor === 0 ? '预留' : '可用空间';
       addGapSegment(partition.offset - cursor, cursor, label, gapKind);
       cursor = partition.offset;
     }
@@ -89,11 +89,11 @@ const partitionSegments = computed<PartitionSegment[]>(() => {
 
     segments.push({
       id: `partition-${partition.name || 'unnamed'}-${index}`,
-      name: partition.name || 'Unnamed',
+      name: partition.name || '未命名分区',
       meta: store.hintDisplaySize(length),
-      title: `${partition.name || 'Partition'} (${partition.type}/${partition.subtype})` +
-        `\nSize: ${store.hintDisplaySize(length)} (${length} bytes)` +
-        `\nOffset: ${formatHex(start)} - ${formatHex(end)}`,
+      title: `${partition.name || '分区'} (${partition.type}/${partition.subtype})` +
+        `\n大小: ${store.hintDisplaySize(length)} (${length} 字节)` +
+        `\n偏移量: ${formatHex(start)} - ${formatHex(end)}`,
       kind: 'partition',
       showMeta: percentage > 8,
       baseColor,
@@ -104,7 +104,7 @@ const partitionSegments = computed<PartitionSegment[]>(() => {
   });
 
   if (cursor < flashSize) {
-    addGapSegment(flashSize - cursor, cursor, 'Unused Flash', 'free');
+    addGapSegment(flashSize - cursor, cursor, '未分配的闪存', 'free');
   }
 
   return finalizeSegments(segments);

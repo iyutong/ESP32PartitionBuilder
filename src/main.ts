@@ -38,7 +38,7 @@ if (flashOverride) {
   if (supportedFlashSizes.includes(flashOverride)) {
     resolvedFlashSize = flashOverride
   } else {
-    console.warn(`Requested flash size ${flashOverride} MB is not supported; falling back to 4 MB`)
+    console.warn(`请求的闪存大小为 ${flashOverride} MB，不支持；回退到默认 4 MB`)
   }
 }
 if (resolvedFlashSize) {
@@ -47,16 +47,16 @@ if (resolvedFlashSize) {
 }
 const csvPayload = getPartitionCsvFromUrl()
 if (csvPayload) {
-  console.debug('partition payload decoded from URL', csvPayload)
+  console.debug('从 URL 解码的分区负载', csvPayload)
   const error = loadPartitionsFromCsv(csvPayload, store, {
     forceFlashSize: resolvedFlashSize ?? undefined
   })
   if (error) {
     urlPartitionMessage.value = `${error.title}: ${error.text}`
-    console.warn('Failed to load partitions from URL:', error.title, error.text)
+    console.warn('从 URL 加载分区失败：:', error.title, error.text)
   } else {
-    const flashMessage = resolvedFlashSize ? ` using ${resolvedFlashSize} MB flash size` : ''
-    urlPartitionMessage.value = `Loaded partitions from URL${flashMessage}`
+    const flashMessage = resolvedFlashSize ? ` 使用 ${resolvedFlashSize} MB 闪存大小` : ''
+    urlPartitionMessage.value = `从 URL 加载分区${flashMessage}`
   }
 }
 app.use(vuetify)
